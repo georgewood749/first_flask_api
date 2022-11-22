@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 gunicorn = "*"
 flask-cors = "*"
+waitress = "*"
 
 [dev-packages]
 autopep8 = "*"
@@ -15,5 +16,6 @@ autopep8 = "*"
 python_version = "3.9"
 
 [scripts]
-start = "gunicorn app:app"
+start_mac = "gunicorn app:app"
+start_win = "waitress-serve --listen=127.0.0.1:5000 app:app"
 dev = "bash -c \"export FLASK_ENV='development' && flask run\""
