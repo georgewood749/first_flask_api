@@ -30,28 +30,35 @@ def index ():
 
 @app.route("/dogs/<int:id>", methods=["GET", "PATCH", "DELETE"])
 def show (id):
-    try:
         # GET
         if request.method == "GET":
-            return next(dogs for dogs in doggos if dogs['id'] == id), 302
+            try:
+                return next(dogs for dogs in doggos if dogs['id'] == id), 302
+            except:
+                raise BadRequest(f"Doggo not found")
 
         # Patch
         elif request.method  == "PATCH":
-            data = request.json
-            for dog in doggos:
-                if dog['id'] == id:
-                    for key, val in data.items():
-                        dog[key] = val
-            return f"{data['name']} was updated in Doggos", 200
+            try:
+                data = request.json
+                for dog in doggos:
+                    if dog['id'] == id:
+                        for key, val in data.items():
+                            dog[key] = val
+                return f"{data['name']} was updated in Doggos", 200
+            except:
+                raise BadRequest(f"Doggo not found")
 
         # Delete
         elif request.method == "DELETE":
-            for dog in doggos:
-                if dog['id'] == id:
-                    doggos.remove(dog)
-            return f"{data['name']} was removed from Doggos", 204    
-    except:
-        raise BadRequest(f"Doggo not found") 
+            try:
+                for dog in doggos:
+                    if dog['id'] == id:
+                        doggos.remove(dog)
+                return f"{data['name']} was removed from Doggos", 204    
+            except:
+                raise BadRequest(f"Doggo not found")
+     
 
 @app.errorhandler(NotFound)
 def handle_404 (err):
@@ -59,7 +66,7 @@ def handle_404 (err):
 
 @app.errorhandler(InternalServerError)
 def handle_500(err):
-    return jsonify({"message" f"It's not you, it's me!"}), 500
+    return jsonify({"message": f"It's not you, it's me!"}), 500
 
 if __name__ == "__main__":
     app.run()
