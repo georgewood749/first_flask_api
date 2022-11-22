@@ -13,3 +13,7 @@ autopep8 = "*"
 
 [requires]
 python_version = "3.9"
+
+[scripts]
+start = "gunicorn app:app"
+dev = "bash -c \"export FLASK_ENV='development' && flask run\""
